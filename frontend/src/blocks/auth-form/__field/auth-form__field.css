@@ -1,0 +1,30 @@
+.auth-form__field {
+  width: 100%;
+  padding: 13px 0;
+  display: block;
+  background: black;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #CCCCCC;
+  color: white;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.21;
+}
+
+.auth-form__field::placeholder {
+  color: white;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.21;
+} 
+
+.auth-form__field:not(:last-of-type) {
+  margin-bottom: 17px;
+}
+
+.auth-form__field:last-of-type {
+  margin-bottom: 216px;
+}

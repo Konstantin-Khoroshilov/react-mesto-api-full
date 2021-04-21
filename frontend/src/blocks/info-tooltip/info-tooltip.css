@@ -1,0 +1,9 @@
+.info-tooltip {
+  position: relative;
+  margin: auto;
+  width: 430px;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  padding-top: 60px;
+}
