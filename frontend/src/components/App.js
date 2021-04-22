@@ -115,7 +115,7 @@ function App() {
     api
       .updateAvatar(link)
       .then((userInfo) => {
-        setCurrentUser(userInfo);
+        setCurrentUser({avatar: userInfo.avatar});
         closeAllPopups();
       })
       .catch((error) => console.log(error));
@@ -162,7 +162,6 @@ function App() {
         localStorage.setItem("token", `Bearer ${res.token}`);
         localStorage.setItem("loggedIn", true);
         setLoggedIn(localStorage.getItem("loggedIn"));
-        history.push('/');
         //загружаем данные пользователя
         api
           .getUserInfo()
@@ -188,6 +187,7 @@ function App() {
             console.log(err);
             setCardsLoadStatus("fail");
           });
+        history.push('/');
       })
       .catch((res) => {
         setIsRegistered(false);
