@@ -3,6 +3,9 @@
   max-width: 882px;
   margin: 0 auto;
   margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0;
 }
 

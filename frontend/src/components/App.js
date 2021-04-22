@@ -11,7 +11,7 @@ import EditAvatarPopup from "./editAvatarPopup/EditAvatarPopup";
 import AddPlacePopup from "./addPlacePopup/AddPlacePopup";
 import Register from "./register/Register";
 import Login from "./login/Login";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, useLocation } from "react-router-dom";
 import ProtectedRoute from "./protectedRoute/ProtectedRoute";
 import InfoTooltip from "./infoTooltip/InfoTooltip";
 
@@ -31,7 +31,6 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [loggedIn, setLoggedIn] = React.useState(true);
   const [isRegistered, setIsRegistered] = React.useState(false);
-
   React.useEffect(() => {
     api
       .getUserInfo()
@@ -48,6 +47,7 @@ function App() {
       });
   }, []);
   const [cards, setCards] = React.useState([]);
+  const location = useLocation();
   React.useEffect(() => {
     //загружаем с сервера начальные карточки
     api
@@ -144,10 +144,15 @@ function App() {
   function handleLoginUser(evt) {
     console.log('user is logined');
   }
+
+  function handleLogOutClick() {
+    console.log('юзернейм разлогинился');
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
-        <Header />
+        <Header currentPath = {location.pathname} currentUser = {currentUser} handleLogOutClick = {handleLogOutClick} />
         <Switch>
           <ProtectedRoute
             path exact ="/"
@@ -166,7 +171,7 @@ function App() {
           <Register onRegisterUser={handleRegisterUser} />
         </Route>
         <Route path="/sign-in">
-          <Login onLoginUser = {handleLoginUser}/>
+          <Login onLoginUser={handleLoginUser} />
         </Route>
         <Route>
           {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}

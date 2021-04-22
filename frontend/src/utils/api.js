@@ -176,16 +176,16 @@ class Api {
 }
 
 const apiData = {
-  initialCardsUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards",
-  getUserDataUrl: "https://mesto.nomoreparties.co/v1/cohort-15/users/me",
-  updateUserDataUrl: "https://mesto.nomoreparties.co/v1/cohort-15/users/me",
-  addNewCardUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards",
-  deleteCardUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards/",
-  setLikeUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards/likes/",
-  removeLikeUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards/likes/",
+  initialCardsUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
+  getUserDataUrl: "https://api.oneofthebest.students.nomoredomains.icu/users/me",
+  updateUserDataUrl: "https://api.oneofthebest.students.nomoredomains.icu/users/me",
+  addNewCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
+  deleteCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/",
+  setLikeUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
+  removeLikeUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
   updateAvatarUrl:
-    "https://mesto.nomoreparties.co/v1/cohort-15/users/me/avatar",
-  authorization: "f45e1c45-8a4a-4b79-8e68-5b3c6639fc71",
+    "https://api.oneofthebest.students.nomoredomains.icu/users/me/avatar",
+  authorization: localStorage.getItem('token'),
 };
 
 const api = new Api(apiData);
