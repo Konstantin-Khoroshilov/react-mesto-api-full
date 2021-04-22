@@ -187,7 +187,6 @@ function App() {
             console.log(err);
             setCardsLoadStatus("fail");
           });
-        history.push('/');
       })
       .catch((res) => {
         setIsRegistered(false);
