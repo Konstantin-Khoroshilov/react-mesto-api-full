@@ -40,6 +40,34 @@ function App() {
   const [cards, setCards] = React.useState([]);
   const location = useLocation();
   const history = useHistory();
+  React.useEffect(() => {
+    if (loggedIn) {
+      api
+      .getUserInfo()
+      .then((data) => {
+        setCurrentUser(data);
+      })
+      .catch((err) => {
+        setCurrentUser({
+          name: "Не удалось загрузить имя пользователя",
+          about: "Не удалось загрузить должность пользователя",
+          avatar: loadErrorImage,
+        });
+        console.log(err);
+      });
+    //загружаем с сервера начальные карточки
+    api
+      .getInitialCards()
+      .then((data) => {
+        setCards(data);
+        setCardsLoadStatus("success");
+      })
+      .catch((err) => {
+        console.log(err);
+        setCardsLoadStatus("fail");
+      });
+    }
+  }, []);
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
     api
@@ -169,7 +197,7 @@ function App() {
 
   function handleLogOutClick() {
     localStorage.removeItem("token");
-    localStorage.setItem("loggedIn", false);
+    localStorage.removeItem("loggedIn");
     setLoggedIn(localStorage.getItem("loggedIn"));
   }
 
