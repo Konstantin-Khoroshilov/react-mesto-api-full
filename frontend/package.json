@@ -17,7 +17,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "npm run build && scp -r ./build/* manly41142009@84.201.175.135:/home/manly41142009/mesto-frontend"
+    "deploy": "npm run build && scp -r ./build/* manly41142009@84.201.175.135:/home/manly41142009/react-mesto-api-full/frontend"
   },
   "browserslist": {
     "production": [

@@ -202,8 +202,8 @@ class Api {
 
 const apiData = {
   initialCardsUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
-  signupUrl: "https://api.oneofthebest.students.nomoredomains.icu/sign-up",
-  signinUrl: "https://api.oneofthebest.students.nomoredomains.icu/sign-in",
+  signupUrl: "https://api.oneofthebest.students.nomoredomains.icu/signup",
+  signinUrl: "https://api.oneofthebest.students.nomoredomains.icu/signin",
   getUserDataUrl:
     "https://api.oneofthebest.students.nomoredomains.icu/users/me",
   updateUserDataUrl:
