@@ -35,7 +35,7 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loggedIn, setLoggedIn] = React.useState();
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [cards, setCards] = React.useState([]);
   const location = useLocation();
@@ -133,6 +133,7 @@ function App() {
       .then((res) => {
         localStorage.setItem("token", `Bearer ${res.token}`);
         setLoggedIn(true);
+        history.push('/');
         //загружаем данные пользователя
         api
           .getUserInfo()
