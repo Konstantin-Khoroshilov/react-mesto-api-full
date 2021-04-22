@@ -19,9 +19,6 @@
     "predeploy": "npm run build",
     "deploy": "npm run build && scp -r ./build/* manly41142009@84.201.175.135:/home/manly41142009/mesto-frontend"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",

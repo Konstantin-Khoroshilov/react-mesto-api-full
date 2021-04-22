@@ -11,7 +11,13 @@ import EditAvatarPopup from "./editAvatarPopup/EditAvatarPopup";
 import AddPlacePopup from "./addPlacePopup/AddPlacePopup";
 import Register from "./register/Register";
 import Login from "./login/Login";
-import { Route, Switch, Redirect, useLocation } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  Redirect,
+  useLocation,
+  useHistory,
+} from "react-router-dom";
 import ProtectedRoute from "./protectedRoute/ProtectedRoute";
 import InfoTooltip from "./infoTooltip/InfoTooltip";
 
@@ -26,41 +32,14 @@ function App() {
   const [isImageViewerPopupOpen, setIsImageViewerPopupOpen] = React.useState(
     false
   );
-  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false); 
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [isRegistered, setIsRegistered] = React.useState(false);
-  React.useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        setCurrentUser({
-          name: "Не удалось загрузить имя пользователя",
-          about: "Не удалось загрузить должность пользователя",
-          avatar: loadErrorImage,
-        });
-        console.log(err);
-      });
-  }, []);
   const [cards, setCards] = React.useState([]);
   const location = useLocation();
-  React.useEffect(() => {
-    //загружаем с сервера начальные карточки
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-        setCardsLoadStatus("success");
-      })
-      .catch((err) => {
-        console.log(err);
-        setCardsLoadStatus("fail");
-      });
-  }, []);
+  const history = useHistory();
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
     api
@@ -79,8 +58,7 @@ function App() {
       const newCards = cards.filter((item) => {
         return item._id !== card._id;
       });
-      setCards(newCards)
-      .catch((error) => console.log(error));
+      setCards(newCards).catch((error) => console.log(error));
     });
   }
   const [cardsLoadStatus, setCardsLoadStatus] = React.useState("inProcess");
@@ -136,26 +114,74 @@ function App() {
       })
       .catch((error) => console.log(error));
   }
-  function handleRegisterUser() {
-    console.log('user is registered');
-    setIsRegistered(false);
-    setIsInfoTooltipOpen(true);
+  function handleRegisterUser({ email, password }) {
+    api
+      .signup(email, password)
+      .then(() => {
+        setIsRegistered(true);
+        setIsInfoTooltipOpen(true);
+        history.push("/sign-in");
+      })
+      .catch((res) => {
+        setIsRegistered(false);
+        setIsInfoTooltipOpen(true);
+      });
   }
-  function handleLoginUser(evt) {
-    console.log('user is logined');
+  function handleLoginUser({ email, password }) {
+    api
+      .signin(email, password)
+      .then((res) => {
+        localStorage.setItem("token", `Bearer ${res.token}`);
+        setLoggedIn(true);
+        //загружаем данные пользователя
+        api
+          .getUserInfo()
+          .then((data) => {
+            setCurrentUser(data);
+          })
+          .catch((err) => {
+            setCurrentUser({
+              name: "Не удалось загрузить имя пользователя",
+              about: "Не удалось загрузить должность пользователя",
+              avatar: loadErrorImage,
+            });
+            console.log(err);
+          });
+        //загружаем с сервера начальные карточки
+        api
+          .getInitialCards()
+          .then((data) => {
+            setCards(data);
+            setCardsLoadStatus("success");
+          })
+          .catch((err) => {
+            console.log(err);
+            setCardsLoadStatus("fail");
+          });
+      })
+      .catch((res) => {
+        setIsRegistered(false);
+        setIsInfoTooltipOpen(true);
+      });
   }
 
   function handleLogOutClick() {
-    console.log('юзернейм разлогинился');
+    localStorage.removeItem("token");
+    setLoggedIn(false);
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
-        <Header currentPath = {location.pathname} currentUser = {currentUser} handleLogOutClick = {handleLogOutClick} />
+        <Header
+          currentPath={location.pathname}
+          currentUser={currentUser}
+          handleLogOutClick={handleLogOutClick}
+        />
         <Switch>
           <ProtectedRoute
-            path exact ="/"
+            path
+            exact="/"
             loggedIn={loggedIn}
             component={Main}
             onEditProfile={handleEditProfileClick}
@@ -167,15 +193,15 @@ function App() {
             cardsLoadStatus={cardsLoadStatus}
             cards={cards}
           />
-        <Route path="/sign-up">
-          <Register onRegisterUser={handleRegisterUser} />
-        </Route>
-        <Route path="/sign-in">
-          <Login onLoginUser={handleLoginUser} />
-        </Route>
-        <Route>
-          {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
-        </Route>
+          <Route path="/sign-up">
+            <Register onRegisterUser={handleRegisterUser} />
+          </Route>
+          <Route path="/sign-in">
+            <Login onLoginUser={handleLoginUser} />
+          </Route>
+          <Route>
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+          </Route>
         </Switch>
         <Footer />
         <EditProfilePopup

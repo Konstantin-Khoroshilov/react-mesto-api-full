@@ -8,9 +8,46 @@ class Api {
     this._setLikeUrl = options.setLikeUrl;
     this._removeLikeUrl = options.removeLikeUrl;
     this._updateAvatarUrl = options.updateAvatarUrl;
+    this._signupUrl = options.signupUrl;
+    this._signinUrl = options.signinUrl;
     this._authorization = options.authorization;
   }
-
+  signup(email, password) {
+    return fetch(this._signupUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      // если ошибка, отклоняем промис
+      return Promise.reject(res);
+    });
+  }
+  signin(email, password) {
+    return fetch(this._signinUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      // если ошибка, отклоняем промис
+      return Promise.reject(res);
+    });
+  }
   getInitialCards() {
     return fetch(this._initialCardsUrl, {
       headers: {
@@ -20,14 +57,12 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c загрузкой начальных карточек: ${res.status}`
       );
     });
   }
-
   getUserInfo() {
     return fetch(this._updateUserDataUrl, {
       headers: {
@@ -37,14 +72,12 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c загрузкой данных пользователя: ${res.status}`
       );
     });
   }
-
   updateUserInfo(userName, userJob) {
     return fetch(this._updateUserDataUrl, {
       method: "PATCH",
@@ -60,7 +93,6 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c обновлением данных пользователя: ${res.status}`
@@ -82,7 +114,6 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c добавлением новой карточки: ${res.status}`
@@ -100,14 +131,12 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c удалением карточки: ${res.status}`
       );
     });
   }
-
   setLike(cardId) {
     return fetch(`${this._setLikeUrl}${cardId}`, {
       method: "PUT",
@@ -119,7 +148,6 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c проставлением лайка: ${res.status}`
@@ -137,14 +165,12 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c удалением лайка: ${res.status}`
       );
     });
   }
-
   changeLikeCardStatus(cardId, isLiked) {
     if (isLiked) {
       return this.removeLike(cardId);
@@ -166,7 +192,6 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-
       // если ошибка, отклоняем промис
       return Promise.reject(
         `Что-то пошло не так c обновлением аватара: ${res.status}`
@@ -177,15 +202,21 @@ class Api {
 
 const apiData = {
   initialCardsUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
-  getUserDataUrl: "https://api.oneofthebest.students.nomoredomains.icu/users/me",
-  updateUserDataUrl: "https://api.oneofthebest.students.nomoredomains.icu/users/me",
+  signupUrl: "https://api.oneofthebest.students.nomoredomains.icu/sign-up",
+  signinUrl: "https://api.oneofthebest.students.nomoredomains.icu/sign-in",
+  getUserDataUrl:
+    "https://api.oneofthebest.students.nomoredomains.icu/users/me",
+  updateUserDataUrl:
+    "https://api.oneofthebest.students.nomoredomains.icu/users/me",
   addNewCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
   deleteCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/",
-  setLikeUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
-  removeLikeUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
+  setLikeUrl:
+    "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
+  removeLikeUrl:
+    "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
   updateAvatarUrl:
     "https://api.oneofthebest.students.nomoredomains.icu/users/me/avatar",
-  authorization: localStorage.getItem('token'),
+  authorization: localStorage.getItem("token"),
 };
 
 const api = new Api(apiData);

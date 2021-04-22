@@ -25,10 +25,54 @@ function () {
     this._setLikeUrl = options.setLikeUrl;
     this._removeLikeUrl = options.removeLikeUrl;
     this._updateAvatarUrl = options.updateAvatarUrl;
+    this._signupUrl = options.signupUrl;
+    this._signinUrl = options.signinUrl;
     this._authorization = options.authorization;
   }
 
   _createClass(Api, [{
+    key: "signup",
+    value: function signup(email, password) {
+      return fetch(this._signupUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      }).then(function (res) {
+        if (res.ok) {
+          return res.json();
+        } // если ошибка, отклоняем промис
+
+
+        return Promise.reject(res);
+      });
+    }
+  }, {
+    key: "signin",
+    value: function signin(email, password) {
+      return fetch(this._signinUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      }).then(function (res) {
+        if (res.ok) {
+          return res.json();
+        } // если ошибка, отклоняем промис
+
+
+        return Promise.reject(res);
+      });
+    }
+  }, {
     key: "getInitialCards",
     value: function getInitialCards() {
       return fetch(this._initialCardsUrl, {
@@ -194,15 +238,17 @@ function () {
 }();
 
 var apiData = {
-  initialCardsUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards",
-  getUserDataUrl: "https://mesto.nomoreparties.co/v1/cohort-15/users/me",
-  updateUserDataUrl: "https://mesto.nomoreparties.co/v1/cohort-15/users/me",
-  addNewCardUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards",
-  deleteCardUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards/",
-  setLikeUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards/likes/",
-  removeLikeUrl: "https://mesto.nomoreparties.co/v1/cohort-15/cards/likes/",
-  updateAvatarUrl: "https://mesto.nomoreparties.co/v1/cohort-15/users/me/avatar",
-  authorization: "f45e1c45-8a4a-4b79-8e68-5b3c6639fc71"
+  initialCardsUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
+  signupUrl: "https://api.oneofthebest.students.nomoredomains.icu/sign-up",
+  signinUrl: "https://api.oneofthebest.students.nomoredomains.icu/sign-in",
+  getUserDataUrl: "https://api.oneofthebest.students.nomoredomains.icu/users/me",
+  updateUserDataUrl: "https://api.oneofthebest.students.nomoredomains.icu/users/me",
+  addNewCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
+  deleteCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/",
+  setLikeUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
+  removeLikeUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
+  updateAvatarUrl: "https://api.oneofthebest.students.nomoredomains.icu/users/me/avatar",
+  authorization: localStorage.getItem("token")
 };
 var api = new Api(apiData);
 var _default = api;
