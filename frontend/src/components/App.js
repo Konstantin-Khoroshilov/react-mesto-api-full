@@ -35,7 +35,9 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem('loggedIn'));
+  const [loggedIn, setLoggedIn] = React.useState(
+    localStorage.getItem("loggedIn")
+  );
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [cards, setCards] = React.useState([]);
   const location = useLocation();
@@ -43,29 +45,29 @@ function App() {
   React.useEffect(() => {
     if (loggedIn) {
       api
-      .getUserInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        setCurrentUser({
-          name: "Не удалось загрузить имя пользователя",
-          about: "Не удалось загрузить должность пользователя",
-          avatar: loadErrorImage,
+        .getUserInfo()
+        .then((data) => {
+          setCurrentUser(data);
+        })
+        .catch((err) => {
+          setCurrentUser({
+            name: "Не удалось загрузить имя пользователя",
+            about: "Не удалось загрузить должность пользователя",
+            avatar: loadErrorImage,
+          });
+          console.log(err);
         });
-        console.log(err);
-      });
-    //загружаем с сервера начальные карточки
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-        setCardsLoadStatus("success");
-      })
-      .catch((err) => {
-        console.log(err);
-        setCardsLoadStatus("fail");
-      });
+      //загружаем с сервера начальные карточки
+      api
+        .getInitialCards()
+        .then((data) => {
+          setCards(data);
+          setCardsLoadStatus("success");
+        })
+        .catch((err) => {
+          console.log(err);
+          setCardsLoadStatus("fail");
+        });
     }
   }, []);
   function handleCardLike(card) {
@@ -115,7 +117,7 @@ function App() {
     api
       .updateAvatar(link)
       .then((userInfo) => {
-        setCurrentUser({avatar: userInfo.avatar});
+        setCurrentUser({ avatar: userInfo.avatar });
         closeAllPopups();
       })
       .catch((error) => console.log(error));
@@ -161,39 +163,39 @@ function App() {
       .then((res) => {
         localStorage.setItem("token", `Bearer ${res.token}`);
         localStorage.setItem("loggedIn", true);
-        //загружаем данные пользователя
-        api
-          .getUserInfo()
-          .then((data) => {
-            setCurrentUser(data);
-          })
-          .catch((err) => {
-            setCurrentUser({
-              name: "Не удалось загрузить имя пользователя",
-              about: "Не удалось загрузить должность пользователя",
-              avatar: loadErrorImage,
-            });
-            console.log(err);
-          });
-        //загружаем с сервера начальные карточки
-        api
-          .getInitialCards()
-          .then((data) => {
-            setCards(data);
-            setCardsLoadStatus("success");
-          })
-          .catch((err) => {
-            console.log(err);
-            setCardsLoadStatus("fail");
-          });
       })
-      .catch((res) => {
+      .catch(() => {
         setIsRegistered(false);
         setIsInfoTooltipOpen(true);
+      });
+    //загружаем данные пользователя
+    api
+      .getUserInfo()
+      .then((data) => {
+        setCurrentUser(data);
+      })
+      .catch((err) => {
+        setCurrentUser({
+          name: "Не удалось загрузить имя пользователя",
+          about: "Не удалось загрузить должность пользователя",
+          avatar: loadErrorImage,
+        });
+        console.log(err);
+      });
+    //загружаем с сервера начальные карточки
+    api
+      .getInitialCards()
+      .then((data) => {
+        setCards(data);
+        setCardsLoadStatus("success");
+      })
+      .catch((err) => {
+        console.log(err);
+        setCardsLoadStatus("fail");
       })
       .finally(() => {
         setLoggedIn(localStorage.getItem("loggedIn"));
-      })
+      });
   }
 
   function handleLogOutClick() {
