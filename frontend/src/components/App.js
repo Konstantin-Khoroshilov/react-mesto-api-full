@@ -35,7 +35,7 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [loggedIn, setLoggedIn] = React.useState();
+  const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem('loggedIn'));
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [cards, setCards] = React.useState([]);
   const location = useLocation();
@@ -132,7 +132,8 @@ function App() {
       .signin(email, password)
       .then((res) => {
         localStorage.setItem("token", `Bearer ${res.token}`);
-        setLoggedIn(true);
+        localStorage.setItem("loggedIn", true);
+        setLoggedIn(localStorage.getItem("loggedIn"));
         history.push('/');
         //загружаем данные пользователя
         api
@@ -168,7 +169,8 @@ function App() {
 
   function handleLogOutClick() {
     localStorage.removeItem("token");
-    setLoggedIn(false);
+    localStorage.setItem("loggedIn", false);
+    setLoggedIn(localStorage.getItem("loggedIn"));
   }
 
   return (

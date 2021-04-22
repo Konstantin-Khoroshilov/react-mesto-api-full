@@ -22,7 +22,7 @@ function Header({ currentPath, currentUser, handleLogOutClick }) {
       <header className="header">
         <img className="header__logo" alt="Место Россия" src={logo} />
         <div>
-          <p className="header__text">{currentUser.name}</p>
+          <p className="header__text">{currentUser.email}</p>
           <Link to="/sign-in" className="header__link header__link_type_logout" onClick={handleLogOutClick}>Выйти</Link>
         </div>
       </header>
