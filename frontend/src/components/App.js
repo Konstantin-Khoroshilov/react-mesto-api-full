@@ -161,7 +161,6 @@ function App() {
       .then((res) => {
         localStorage.setItem("token", `Bearer ${res.token}`);
         localStorage.setItem("loggedIn", true);
-        setLoggedIn(localStorage.getItem("loggedIn"));
         //загружаем данные пользователя
         api
           .getUserInfo()
@@ -191,7 +190,10 @@ function App() {
       .catch((res) => {
         setIsRegistered(false);
         setIsInfoTooltipOpen(true);
-      });
+      })
+      .finally(() => {
+        setLoggedIn(localStorage.getItem("loggedIn"));
+      })
   }
 
   function handleLogOutClick() {
