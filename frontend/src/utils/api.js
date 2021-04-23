@@ -51,7 +51,7 @@ class Api {
   getInitialCards(token) {
     return fetch(this._initialCardsUrl, {
       headers: {
-        authorization: this._authorization ? this._authorization: token,
+        authorization: token ? token : this._authorizationtoken,
       },
     }).then((res) => {
       if (res.ok) {
@@ -66,7 +66,7 @@ class Api {
   getUserInfo(token) {
     return fetch(this._updateUserDataUrl, {
       headers: {
-        authorization: this._authorization ? this._authorization : token,
+        authorization: token ? token : this._authorizationtoken,
       },
     }).then((res) => {
       if (res.ok) {

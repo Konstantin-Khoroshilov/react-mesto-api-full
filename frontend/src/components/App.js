@@ -35,43 +35,31 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [loggedIn, setLoggedIn] = React.useState(
-    localStorage.getItem("loggedIn")
-  );
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [cards, setCards] = React.useState([]);
   const location = useLocation();
   const history = useHistory();
   React.useEffect(() => {
-    if (loggedIn) {
-      api
-        .getUserInfo()
-        .then((data) => {
-          setCurrentUser(data);
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      api.getUserInfo(token)
+        .then((user) => {
+          setCurrentUser(user);
         })
-        .catch((err) => {
-          setCurrentUser({
-            name: "Не удалось загрузить имя пользователя",
-            about: "Не удалось загрузить должность пользователя",
-            avatar: loadErrorImage,
-          });
-          console.log(err);
-        });
-      //загружаем с сервера начальные карточки
-      api
-        .getInitialCards()
-        .then((data) => {
-          setCards(data);
-          setCardsLoadStatus("success");
+        .then(() => {
+          api.getInitialCards(token)
+            .then((cards) => {
+              setCards(cards);
+              setCardsLoadStatus("success");
+            })
         })
-        .catch((err) => {
-          console.log(err);
-          setCardsLoadStatus("fail");
-        });
+        setLoggedIn(true);
+        history.push('/');
     }
   }, []);
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     api
       .changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
@@ -88,7 +76,7 @@ function App() {
       const newCards = cards.filter((item) => {
         return item._id !== card._id;
       });
-      setCards(newCards).catch((error) => console.log(error));
+      setCards(newCards);
     });
   }
   const [cardsLoadStatus, setCardsLoadStatus] = React.useState("inProcess");
@@ -157,52 +145,28 @@ function App() {
         setIsInfoTooltipOpen(true);
       });
   }
-  function handleLoginUser({ email, password }) {
-    api
-      .signin(email, password)
-      .then((res) => {
-        localStorage.setItem("token", `Bearer ${res.token}`);
-        localStorage.setItem("loggedIn", true);
-        //загружаем данные пользователя
-        api
-          .getUserInfo(`Bearer ${res.token}`)
-          .then((data) => {
-            setCurrentUser(data);
-          })
-          .catch((err) => {
-            setCurrentUser({
-              name: "Не удалось загрузить имя пользователя",
-              about: "Не удалось загрузить должность пользователя",
-              avatar: loadErrorImage,
-            });
-            console.log(err);
-          });
-        //загружаем с сервера начальные карточки
-        api
-          .getInitialCards(`Bearer ${res.token}`)
-          .then((data) => {
-            setCards(data);
-            setCardsLoadStatus("success");
-          })
-          .catch((err) => {
-            console.log(err);
-            setCardsLoadStatus("fail");
-          })
-          .finally(() => {
-            setLoggedIn(localStorage.getItem("loggedIn"));
-            history.push('/');
-          });
-      })
-      .catch(() => {
-        setIsRegistered(false);
-        setIsInfoTooltipOpen(true);
-      });
+  async function handleLoginUser({ email, password }) {
+    try {
+      const tokenRequest = await api.signin(email, password);
+      const token = await tokenRequest;
+      const user = await api.getUserInfo(`Bearer ${token.token}`);
+      const cards = await api.getInitialCards(`Bearer ${token.token}`);
+      setCurrentUser(user);
+      setCards(cards);
+      setCardsLoadStatus("success");
+      localStorage.setItem('token', `Bearer ${token.token}`);
+      setLoggedIn(true);
+      history.push('/');
+    } catch(err) {
+      console.log(err);
+      setIsRegistered(false);
+      setIsInfoTooltipOpen(true);
+    }
   }
 
   function handleLogOutClick() {
     localStorage.removeItem("token");
-    localStorage.removeItem("loggedIn");
-    setLoggedIn(localStorage.getItem("loggedIn"));
+    setLoggedIn(false);
   }
 
   return (
