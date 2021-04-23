@@ -83,7 +83,7 @@ module.exports.updateAvatar = (req, res, next) => {
         runValidators: true, // данные будут валидированы перед изменением
       },
     )
-      .then((user) => res.send({ avatar: user.avatar }))
+      .then((user) => res.send(user))
       .catch(next);
   }
 };
