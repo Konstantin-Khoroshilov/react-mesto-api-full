@@ -169,8 +169,9 @@ function App() {
         setIsInfoTooltipOpen(true);
       });
     //загружаем данные пользователя
-    api
-      .getUserInfo()
+    .then(() => {
+      api
+        .getUserInfo()
       .then((data) => {
         setCurrentUser(data);
       })
@@ -182,18 +183,21 @@ function App() {
         });
         console.log(err);
       });
-    //загружаем с сервера начальные карточки
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-        setCardsLoadStatus("success");
+    })
+      .then(() => {
+        //загружаем с сервера начальные карточки
+        api
+          .getInitialCards()
+          .then((data) => {
+            setCards(data);
+            setCardsLoadStatus("success");
+          })
+          .catch((err) => {
+            console.log(err);
+            setCardsLoadStatus("fail");
+          })
       })
-      .catch((err) => {
-        console.log(err);
-        setCardsLoadStatus("fail");
-      })
-      .finally(() => {
+      .then(() => {
         setLoggedIn(localStorage.getItem("loggedIn"));
       });
   }
