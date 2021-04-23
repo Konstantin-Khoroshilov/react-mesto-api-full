@@ -23,12 +23,12 @@ router.post('/cards', celebrate({
       .pattern(/(^https?:\/\/www\.[0-9a-z-]+\.[0-9a-z-]{2,}([/a-z0-9\-._~:?#[\]@!$&'()*+,;=]+)?$)|(^https?:\/\/[^www][0-9a-z-]+\.[0-9a-z-]{2,}([/a-z0-9\-._~:?#[\]@!$&'()*+,;=]+)?$)/),
   }),
 }), auth, createCard);
-router.put('/cards/:cardId/likes', celebrate({
+router.put('/cards/likes/:cardId', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().required().length(24),
   }),
 }), auth, likeCard);
-router.delete('/cards/:cardId/likes', celebrate({
+router.delete('/cards/likes/:cardId', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().required().length(24),
   }),

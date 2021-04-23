@@ -48,10 +48,10 @@ class Api {
       return Promise.reject(res);
     });
   }
-  getInitialCards() {
+  getInitialCards(token) {
     return fetch(this._initialCardsUrl, {
       headers: {
-        authorization: this._authorization,
+        authorization: this._authorization ? this._authorization: token,
       },
     }).then((res) => {
       if (res.ok) {
@@ -63,10 +63,10 @@ class Api {
       );
     });
   }
-  getUserInfo() {
+  getUserInfo(token) {
     return fetch(this._updateUserDataUrl, {
       headers: {
-        authorization: this._authorization,
+        authorization: this._authorization ? this._authorization : token,
       },
     }).then((res) => {
       if (res.ok) {

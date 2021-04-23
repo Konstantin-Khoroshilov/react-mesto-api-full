@@ -116,8 +116,11 @@ function App() {
   function handleUpdateAvatar(link) {
     api
       .updateAvatar(link)
-      .then((userInfo) => {
-        setCurrentUser({ avatar: userInfo.avatar });
+      .then((avatar) => {
+        setCurrentUser({
+          avatar,
+          ...currentUser
+        });
         closeAllPopups();
       })
       .catch((error) => console.log(error));
@@ -163,31 +166,23 @@ function App() {
       .then((res) => {
         localStorage.setItem("token", `Bearer ${res.token}`);
         localStorage.setItem("loggedIn", true);
-      })
-      .catch(() => {
-        setIsRegistered(false);
-        setIsInfoTooltipOpen(true);
-      });
-    //загружаем данные пользователя
-    .then(() => {
-      api
-        .getUserInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        setCurrentUser({
-          name: "Не удалось загрузить имя пользователя",
-          about: "Не удалось загрузить должность пользователя",
-          avatar: loadErrorImage,
-        });
-        console.log(err);
-      });
-    })
-      .then(() => {
+        //загружаем данные пользователя
+        api
+          .getUserInfo(`Bearer ${res.token}`)
+          .then((data) => {
+            setCurrentUser(data);
+          })
+          .catch((err) => {
+            setCurrentUser({
+              name: "Не удалось загрузить имя пользователя",
+              about: "Не удалось загрузить должность пользователя",
+              avatar: loadErrorImage,
+            });
+            console.log(err);
+          });
         //загружаем с сервера начальные карточки
         api
-          .getInitialCards()
+          .getInitialCards(`Bearer ${res.token}`)
           .then((data) => {
             setCards(data);
             setCardsLoadStatus("success");
@@ -196,9 +191,14 @@ function App() {
             console.log(err);
             setCardsLoadStatus("fail");
           })
+          .finally(() => {
+            setLoggedIn(localStorage.getItem("loggedIn"));
+            history.push('/');
+          });
       })
-      .then(() => {
-        setLoggedIn(localStorage.getItem("loggedIn"));
+      .catch(() => {
+        setIsRegistered(false);
+        setIsInfoTooltipOpen(true);
       });
   }
 
