@@ -138,7 +138,7 @@ class Api {
     });
   }
   setLike(cardId) {
-    return fetch(`${this._setLikeUrl}${cardId}`, {
+    return fetch(`${this._setLikeUrl}${cardId}/likes`, {
       method: "PUT",
       headers: {
         authorization: this._authorization,
@@ -155,7 +155,7 @@ class Api {
     });
   }
   removeLike(cardId) {
-    return fetch(`${this._removeLikeUrl}${cardId}`, {
+    return fetch(`${this._removeLikeUrl}${cardId}/likes`, {
       method: "DELETE",
       headers: {
         authorization: this._authorization,
@@ -211,9 +211,9 @@ const apiData = {
   addNewCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards",
   deleteCardUrl: "https://api.oneofthebest.students.nomoredomains.icu/cards/",
   setLikeUrl:
-    "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
+    "https://api.oneofthebest.students.nomoredomains.icu/cards/",
   removeLikeUrl:
-    "https://api.oneofthebest.students.nomoredomains.icu/cards/likes/",
+    "https://api.oneofthebest.students.nomoredomains.icu/cards/",
   updateAvatarUrl:
     "https://api.oneofthebest.students.nomoredomains.icu/users/me/avatar",
   authorization: localStorage.getItem("token"),
