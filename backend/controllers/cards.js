@@ -63,7 +63,7 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
   { new: true },
 ).orFail(new Error('notFound'))
-  .then((card) => { res.send(card.likes); })
+  .then((card) => { res.send(card); })
   .catch((e) => { errorHandler(e, next); });
 
 module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
@@ -71,5 +71,5 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   { $pull: { likes: req.user._id } }, // убрать _id из массива
   { new: true },
 ).orFail(new Error('notFound'))
-  .then((card) => { res.send(card.likes); })
+  .then((card) => { res.send(card); })
   .catch((e) => { errorHandler(e, next); });
