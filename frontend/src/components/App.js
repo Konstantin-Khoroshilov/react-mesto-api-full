@@ -5,7 +5,6 @@ import Footer from "./footer/Footer";
 import ImagePopup from "./imagePopup/ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
-import loadErrorImage from "../images/load-error.gif";
 import EditProfilePopup from "./editProfilePopup/EditProfilePopup";
 import EditAvatarPopup from "./editAvatarPopup/EditAvatarPopup";
 import AddPlacePopup from "./addPlacePopup/AddPlacePopup";
@@ -118,6 +117,7 @@ function App() {
           name: userInfo.name,
           about: userInfo.about,
           avatar: userInfo.avatar,
+          email: userInfo.email,
         });
         closeAllPopups();
       })
